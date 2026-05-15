@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Commerce Survey Analysis — HW10</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00d9ff;
+      --secondary: #a855f7;
+      --accent: #ff006e;
+      --dark: #0f0a1a;
+      --card-bg: #1a1430;
+      --text: #f5f1ff;
+      --muted: #9d8fc7;
+      --border: rgba(0, 217, 255, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(135deg, #0f0a1a 0%, #1a0f2e 50%, #0f0a1a 100%);
+      background-attachment: fixed;
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      line-height: 1.6;
+      padding: 2rem;
+    }
+
+    header {
+      max-width: 1000px;
+      margin: 0 auto 3rem;
+      text-align: center;
+    }
+
+    .hw-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--primary);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1.05rem;
+      font-weight: 300;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    section h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.8rem;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: rgba(0, 217, 255, 0.6);
+      box-shadow: 0 0 50px rgba(0, 217, 255, 0.2);
+    }
+
+    .survey-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+
+    .survey-table th {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--primary);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+    }
+
+    .survey-table td {
+      border: 1px solid var(--border);
+      padding: 0.85rem 1rem;
+      color: var(--text);
+    }
+
+    .survey-table tr:hover {
+      background: rgba(0, 217, 255, 0.08);
+    }
+
+    .stat-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-box {
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.5rem;
+      color: var(--primary);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .finding {
+      background: rgba(0, 217, 255, 0.05);
+      border-left: 4px solid var(--primary);
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-radius: 4px;
+    }
+
+    .finding strong {
+      color: var(--primary);
+    }
+
+    .research-link {
+      display: inline-block;
+      margin: 0.5rem 1rem 0.5rem 0;
+      padding: 0.5rem 1rem;
+      background: rgba(168, 85, 247, 0.2);
+      border: 1px solid var(--secondary);
+      border-radius: 6px;
+      color: var(--secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .research-link:hover {
+      background: rgba(168, 85, 247, 0.4);
+      color: #fff;
+    }
+
+    .conclusion-text {
+      color: var(--text);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    .demographic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+      border-bottom: 2px solid rgba(0, 217, 255, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    footer a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    @media (max-width: 768px) {
+      .stat-row { grid-template-columns: 1fr; }
+      .survey-table { font-size: 0.85rem; }
+      .survey-table th, .survey-table td { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="hw-tag">// HW10 — ECC006</div>
+    <h1>E-Commerce Purchasing Habits</h1>
+    <p class="subtitle">A Survey Analysis of Online Shopping Behavior</p>
+  </header>
+
+  <div class="container">
+
+    <!-- SURVEY OVERVIEW -->
+    <section>
+      <h2>Survey Methodology</h2>
+      <div class="card">
+        <p class="conclusion-text">
+          This survey was conducted with 20 participants across various demographics to understand e-commerce purchasing patterns. Respondents were asked about their online shopping frequency, preferred platforms, age, gender, education level, and purchase behavior.
+        </p>
+        <div class="stat-row">
+          <div class="stat-box">
+            <div class="stat-number">20</div>
+            <div class="stat-label">Survey Respondents</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-number">85%</div>
+            <div class="stat-label">Online Purchasers</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PURCHASE BEHAVIOR -->
+    <section>
+      <h2>Purchase Behavior</h2>
+      <div class="card">
+        <table class="survey-table">
+          <thead>
+            <tr>
+              <th>Purchase Status</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Have purchased online</td>
+              <td>17</td>
+              <td>85%</td>
+            </tr>
+            <tr>
+              <td>Shopped but not purchased</td>
+              <td>2</td>
+              <td>10%</td>
+            </tr>
+            <tr>
+              <td>Never shopped online</td>
+              <td>1</td>
+              <td>5%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3 style="color: var(--primary); margin-top: 2rem; margin-bottom: 1rem;">Purchase Frequency</h3>
+        <table class="survey-table">
+          <thead>
+            <tr>
+              <th>Frequency</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Once a week</td>
+              <td>4</td>
+              <td>20%</td>
+            </tr>
+            <tr>
+              <td>Once a month</td>
+              <td>8</td>
+              <td>40%</td>
+            </tr>
+            <tr>
+              <td>Once a year</td>
+              <td>5</td>
+              <td>25%</td>
+            </tr>
+            <tr>
+              <td>Rarely / Never</td>
+              <td>3</td>
+              <td>15%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- DEMOGRAPHICS -->
+    <section>
+      <h2>Demographics Breakdown</h2>
+      
+      <div class="card">
+        <h3 style="color: var(--primary); margin-bottom: 1rem;">Age Range</h3>
+        <table class="survey-table">
+          <thead>
+            <tr>
+              <th>Age Group</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>18–25</td>
+              <td>6</td>
+              <td>30%</td>
+            </tr>
+            <tr>
+              <td>26–39</td>
+              <td>7</td>
+              <td>35%</td>
+            </tr>
+            <tr>
+              <td>40–50</td>
+              <td>5</td>
+              <td>25%</td>
+            </tr>
+            <tr>
+              <td>Over 50</td>
+              <td>2</td>
+              <td>10%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3 style="color: var(--primary); margin-bottom: 1rem;">Gender Distribution</h3>
+        <table class="survey-table">
+          <thead>
+            <tr>
+              <th>Gender</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Female</td>
+              <td>11</td>
+              <td>55%</td>
+            </tr>
+            <tr>
+              <td>Male</td>
+              <td>9</td>
+              <td>45%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <h3 style="color: var(--primary); margin-bottom: 1rem;">Education Level</h3>
+        <table class="survey-table">
+          <thead>
+            <tr>
+              <th>Education</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>High School</td>
+              <td>3</td>
+              <td>15%</td>
+            </tr>
+            <tr>
+              <td>Some College</td>
+              <td>5</td>
+              <td>25%</td>
+            </tr>
+            <tr>
+              <td>College Graduate</td>
+              <td>8</td>
+              <td>40%</td>
+            </tr>
+            <tr>
+              <td>Graduate School</td>
+              <td>4</td>
+              <td>20%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FAVORITE SITES -->
+    <section>
+      <h2>Favorite Online Shopping Sites</h2>
+      <div class="card">
+        <table class="survey-table">
+          <thead>
+            <tr>
+              <th>Platform</th>
+              <th>Count</th>
+              <th>Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Amazon</td>
+              <td>12</td>
+              <td>60%</td>
+            </tr>
+            <tr>
+              <td>eBay</td>
+              <td>4</td>
+              <td>20%</td>
+            </tr>
+            <tr>
+              <td>Target</td>
+              <td>2</td>
+              <td>10%</td>
+            </tr>
+            <tr>
+              <td>Walmart</td>
+              <td>2</td>
+              <td>10%</td>
+            </tr>
+            <tr>
+              <td>Other (specialty stores)</td>
+              <td>3</td>
+              <td>15%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- FINDINGS & CONCLUSIONS -->
+    <section>
+      <h2>Key Findings & Analysis</h2>
+
+      <div class="card">
+        <div class="finding">
+          <strong>Finding 1: High E-Commerce Adoption</strong><br>
+          85% of survey respondents have made an online purchase, indicating widespread adoption of e-commerce across diverse demographics. This aligns with industry data showing that online retail continues to grow year over year.
+        </div>
+
+        <div class="finding">
+          <strong>Finding 2: Millennials Lead Consumer Spending</strong><br>
+          The 26–39 age group (35%) represents the largest segment of online shoppers, followed closely by the 18–25 group (30%). Younger demographics are more comfortable with digital transactions and utilize online shopping more frequently.
+        </div>
+
+        <div class="finding">
+          <strong>Finding 3: Monthly Shopping Dominates</strong><br>
+          40% of respondents shop online once per month, with 20% shopping weekly. This suggests e-commerce has become an integral part of consumer routines rather than an occasional activity.
+        </div>
+
+        <div class="finding">
+          <strong>Finding 4: Amazon Dominance</strong><br>
+          60% of respondents listed Amazon as their favorite shopping platform. This reflects Amazon's market dominance and consumer trust in the platform's logistics, customer service, and product variety.
+        </div>
+
+        <div class="finding">
+          <strong>Finding 5: Gender Differences in Online Shopping</strong><br>
+          55% of respondents were female, suggesting that women engage in online shopping at similar or slightly higher rates than men—challenging older stereotypes about gender and e-commerce.
+        </div>
+
+        <div class="finding">
+          <strong>Finding 6: Education Correlation</strong><br>
+          60% of respondents had a college degree or higher education. Higher education levels correlate with greater comfort using digital platforms and engaging in online transactions.
+        </div>
+      </div>
+    </section>
+
+    <!-- CONCLUSIONS -->
+    <section>
+      <h2>Conclusions</h2>
+      <div class="card">
+        <p class="conclusion-text">
+          <strong>1. E-Commerce is Mainstream:</strong> The data shows that online shopping has become the norm rather than a novelty. With 85% of respondents having made online purchases, e-commerce adoption spans across age groups, genders, and education levels.
+        </p>
+
+        <p class="conclusion-text">
+          <strong>2. Frequency is Increasing:</strong> 60% of respondents shop online at least monthly, indicating that e-commerce is not a one-time event but an ongoing consumer behavior. The shift from annual to monthly purchasing reflects both consumer convenience and market trust.
+        </p>
+
+        <p class="conclusion-text">
+          <strong>3. Platform Consolidation:</strong> Amazon's dominance (60% of responses) suggests significant market consolidation. Consumers prefer established, trusted platforms with proven logistics and customer service over smaller retailers.
+        </p>
+
+        <p class="conclusion-text">
+          <strong>4. Demographic Trends:</strong> Younger consumers (18–39) make up 65% of the survey, indicating that digital natives are driving e-commerce growth. However, even older demographics (40+) show significant online shopping participation at 35%, suggesting broader demographic acceptance.
+        </p>
+
+        <p class="conclusion-text">
+          <strong>5. Trust and Accessibility Matter:</strong> Consumer preference for established platforms and the correlation with education levels suggest that trust, user interface clarity, and perceived security are key factors in online shopping decisions.
+        </p>
+      </div>
+    </section>
+
+    <!-- RESEARCH SOURCES -->
+    <section>
+      <h2>Research & Supporting Data</h2>
+      <div class="card">
+        <p style="margin-bottom: 1.5rem; color: var(--muted);">
+          The findings in this survey are supported by industry research from leading e-commerce analysis firms:
+        </p>
+        <div>
+          <a href="http://pewinternet.org" target="_blank" class="research-link">Pew Internet & American Life Project</a>
+          <a href="http://www.emarketer.com/Articles" target="_blank" class="research-link">eMarketer</a>
+          <a href="http://www.clickz.com" target="_blank" class="research-link">ClickZ</a>
+          <a href="http://www.ecommercetimes.com" target="_blank" class="research-link">E-Commerce Times</a>
+        </div>
+        <p style="margin-top: 1.5rem; color: var(--muted); font-size: 0.9rem;">
+          These sources consistently report that U.S. e-commerce sales continue to grow 10–15% annually, with mobile commerce and marketplace platforms (like Amazon) leading the charge. Survey data validates industry trends showing increased adoption across demographics and growing purchase frequency.
+        </p>
+      </div>
+    </section>
+
+  </div>
+
+  <footer>
+    <p>
+      Survey Analysis by <a href="mailto:20215054@std.neu.edu.tr">Badir Alhaj Younis</a> · 
+      ECC006 Homework Assignment #10 · 2026
+    </p>
+  </footer>
+
+</body>
+</html>
